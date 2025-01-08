@@ -9,8 +9,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/hemandev/microservice/user-service/graph/model"
+	pb "github.com/hemandev/microservice/user-service/proto/gen/proto/gen"
 	"google.golang.org/grpc"
-	pb "github.com/hemandev/microservice/user-service/proto/gen"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
