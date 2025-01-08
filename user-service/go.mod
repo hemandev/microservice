@@ -7,6 +7,14 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/vektah/gqlparser/v2 v2.5.21
 	google.golang.org/grpc v1.69.2
+	google.golang.org/protobuf v1.36.1
+)
+
+require (
+	github.com/99designs/gqlgen v0.17.62
+	github.com/lib/pq v1.10.9
+	github.com/vektah/gqlparser/v2 v2.5.21
+	google.golang.org/grpc v1.69.2
 )
 
 require (

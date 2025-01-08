@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"google.golang.org/grpc"
-	pb "user-service/proto"
+	pb "github.com/hemandev/microservice/user-service/proto"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
