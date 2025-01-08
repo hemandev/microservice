@@ -5,7 +5,7 @@ type Post {
 }
 
 type Mutation {
-    createPost(title: String!, authorId: ID!): Post
+    createPost(title: String!, authorId: ID!): Post!
 }
 
 extend type User @key(fields: "id") {

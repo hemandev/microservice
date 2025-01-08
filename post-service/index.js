@@ -31,6 +31,15 @@ const resolvers = {
       return res.rows;
     },
   },
+  Mutation: {
+    createPost: async (_, { title, authorId }) => {
+      const res = await pool.query(
+        'INSERT INTO posts (title, authorId) VALUES ($1, $2) RETURNING *',
+        [title, authorId]
+      );
+      return res.rows[0];
+    },
+  },
   Post: {
     author: (post) => ({ __typename: "User", id: post.authorId }),
   },
