@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  user-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: user_db
+    ports:
+      - "5433:5432"
+    networks:
+      - monorepo-network
+    volumes:
+      - ./user-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./user-service/db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+
+  post-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: post_db
+    ports:
+      - "5434:5432"
+    networks:
+      - monorepo-network
+    volumes:
+      - ./post-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./post-service/db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "4001:4001"
+    environment:
+      DB_HOST: user-db
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: password
+      DB_NAME: user_db
+    depends_on:
+      - user-db
+    networks:
+      - monorepo-network
+
+  post-service:
+    build: ./post-service
+    ports:
+      - "4002:4002"
+    environment:
+      DB_HOST: post-db
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: password
+      DB_NAME: post_db
+    depends_on:
+      - post-db
+    networks:
+      - monorepo-network
+
+  router-service:
+    build: ./router-service
+    ports:
+      - "4000:4000"
+    depends_on:
+      - user-service
+      - post-service
+    networks:
+      - monorepo-network
+
+networks:
+  monorepo-network:
+    driver: bridge
