@@ -14,6 +14,11 @@ services:
     volumes:
       - ./user-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./user-service/db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d user_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   post-db:
     image: postgres:13
@@ -28,6 +33,11 @@ services:
     volumes:
       - ./post-service/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./post-service/db/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d post_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   user-service:
     build: ./user-service
@@ -39,8 +49,15 @@ services:
       DB_USER: admin
       DB_PASSWORD: password
       DB_NAME: user_db
+      GRPC_PORT: 50051
     depends_on:
-      - user-db
+      user-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4001/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - monorepo-network
 
@@ -54,8 +71,17 @@ services:
       DB_USER: admin
       DB_PASSWORD: password
       DB_NAME: post_db
+      USER_SERVICE_URL: user-service:50051
     depends_on:
-      - post-db
+      post-db:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4002/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - monorepo-network
 
