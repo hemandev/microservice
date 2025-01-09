@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hemandev/microservice/user-service/graph/model"
 )
