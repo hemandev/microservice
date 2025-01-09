@@ -70,8 +70,8 @@ const resolvers = {
   },
   Post: {
     author: (post) => {
-      // Use either post.authorid (lowercase from DB) or post.authorId (from GraphQL input)
       const authorId = post.authorid || post.authorId;
+      // Return a reference that the federation gateway can resolve
       return { __typename: "User", id: authorId };
     }
   },
