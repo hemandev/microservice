@@ -69,7 +69,10 @@ const resolvers = {
     },
   },
   Post: {
-    author: (post) => ({ __typename: "User", id: post.authorId }),
+    author: (post) => {
+      console.log('Post is ', post)
+      return { __typename: "User", id: post.authorid };
+    }
   },
   User: {
     posts: async (user) => {
