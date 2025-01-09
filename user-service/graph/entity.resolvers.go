@@ -13,7 +13,12 @@ import (
 
 // FindUserByID is the resolver for the findUserByID field.
 func (r *entityResolver) FindUserByID(ctx context.Context, id string) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: FindUserByID - findUserByID"))
+	var user model.User
+	err := r.DB.QueryRow("SELECT id, name FROM users WHERE id = $1", id).Scan(&user.ID, &user.Name)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
 
 // Entity returns EntityResolver implementation.
